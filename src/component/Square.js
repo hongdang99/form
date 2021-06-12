@@ -11,7 +11,6 @@ class Square extends React.Component {
                 }
 
             >
-                {this.props.value}
                 <img src={`/images/pokemon_${this.props.value}.png`} style={this.props.value === 0 ? {display: 'none'} : null} alt=''/>
             </button>
         );
