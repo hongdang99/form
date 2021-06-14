@@ -38,7 +38,25 @@ class App extends Component {
         "6",
         "5",
         "4",
+        "4",
+        "2",
+        "1",
+        0,
+      ],
+      [
+        0,
+        "1",
+        "2",
         "3",
+        "4",
+        "5",
+        "6",
+        "6",
+        "6",
+        "6",
+        "5",
+        "4",
+        "4",
         "2",
         "1",
         0,
@@ -108,25 +126,7 @@ class App extends Component {
         "7",
         "7",
         "6",
-        "5",
-        "4",
-        "3",
-        "2",
-        "1",
-        0,
-      ],
-      [
-        0,
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
         "6",
-        "7",
-        "7",
-        "6",
-        "5",
         "4",
         "3",
         "2",
@@ -234,7 +234,7 @@ class App extends Component {
         return false;
       }
 
-      tmp.push({ x: x, y: yi, value: "horizontal" });
+      tmp.push({ x: x, y: yi, value: "horizonal" });
     }
 
     lines.push(...tmp);
@@ -256,7 +256,7 @@ class App extends Component {
     lines.push(...tmp);
     return true;
   };
-  // In a rectangle size and horizontal way
+  // In a rectangle size and horizonal way
   checkRectX = (p1, p2) => {
     let pleft = p1;
     let pright = p2;
@@ -267,7 +267,7 @@ class App extends Component {
     }
 
     lines = [];
-    for (let yi = pleft.y + 1; yi < pright.y; yi++) {
+    for (let yi = pleft.y; yi < pright.y; yi++) {
       if (
         this.checkLineX(pleft.y, yi, pleft.x) &&
         this.checkLineY(pleft.x, pright.x, yi) &&
@@ -305,7 +305,7 @@ class App extends Component {
 
     lines = [];
 
-    for (let xi = pAbove.x + 1; xi < pBottom.x; xi++) {
+    for (let xi = pAbove.x + 1; xi <= pBottom.x; xi++) {
       if (
         this.checkLineY(pAbove.x, xi, pAbove.y) &&
         this.checkLineX(pAbove.y, pBottom.y, xi) &&
@@ -359,7 +359,7 @@ class App extends Component {
     lines = [];
     p = { x: pLeft.x, y: pRight.y };
     if (this.state.square[p.x][p.y] !== 0) return false;
-
+    debugger;
     if (
       this.checkLineX(p.y, pLeft.y, p.x) &&
       this.checkLineY(p.x, pRight.x, p.y)
@@ -374,7 +374,7 @@ class App extends Component {
 
     return false;
   }
-  // Extend or L way in a horizontal way
+  // Extend or L way in a horizontalway
   checkExtendY = (p1, p2, maxY) => {
     let pup = p1;
     let pdown = p2;
@@ -387,13 +387,13 @@ class App extends Component {
     //left to right
     lines = [];
     for (let yi = pup.y + 1; yi <= pdown.y; yi++) {
-      lines.push({ x: pup.x, y: yi, value: "horizontal" });
+      lines.push({ x: pup.x, y: yi, value: "horizonal" });
     }
 
     for (let yi = pdown.y + 1; yi <= maxY + 1; yi++) {
       lines.push(
-        { x: pup.x, y: yi, value: "horizontal" },
-        { x: pdown.x, y: yi, value: "horizontal" }
+        { x: pup.x, y: yi, value: "horizonal" },
+        { x: pdown.x, y: yi, value: "horizonal" }
       );
 
       if (
@@ -422,12 +422,12 @@ class App extends Component {
     // right to left
     lines = [];
     for (let yi = pdown.y - 1; yi >= pup.y; yi--) {
-      lines.push({ x: pdown.x, y: yi, value: "horizontal" });
+      lines.push({ x: pdown.x, y: yi, value: "horizonal" });
     }
     for (let yi = pup.y - 1; yi >= 0; yi--) {
       lines.push(
-        { x: pup.x, y: yi, value: "horizontal" },
-        { x: pdown.x, y: yi, value: "horizontal" }
+        { x: pup.x, y: yi, value: "horizonal" },
+        { x: pdown.x, y: yi, value: "horizonal" }
       );
 
       if (
@@ -560,13 +560,17 @@ class App extends Component {
     if (y1 === y2 && this.checkLineY(x1, x2, y1)) {
       return true;
     }
+    debugger;
     if (x1 !== x2 && this.checkRectX(p1, p2)) {
       return true;
     }
+    debugger;
     if (x1 !== x2 && this.checkRectY(p1, p2)) {
       return true;
     }
-    if (x1 === x2 - 1 && this.checkCorner(p1, p2)) {
+    debugger;
+    if (this.checkCorner(p1, p2)) {
+      console.log("Booop");
       return true;
     }
     debugger;

@@ -14,24 +14,15 @@ class Board extends React.Component {
   }
 
   render() {
-    const { square } = this.props;
-    console.log("square:", square[8][15]); // See Log
-    const boardGame = this.props.square.map((item, i) => (
+    const { square, square1, square2 } = this.props;
+    const boardGame = square.map((item, i) => (
       <div key={i} className="board-row">
         {item.map((square, j) => {
           let selected = false;
 
-          if (
-            this.props.square1 &&
-            this.props.square1.x === i &&
-            this.props.square1.y === j
-          ) {
+          if (square1 && square1.x === i && square1.y === j) {
             selected = true;
-          } else if (
-            this.props.square2 &&
-            this.props.square2.x === i &&
-            this.props.square2.y === j
-          ) {
+          } else if (square2 && square2.x === i && square2.y === j) {
             selected = true;
           }
           return this.renderSquare(i, j, selected);
