@@ -12,14 +12,13 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      square: this.generateBoard(),
+      square: this.generateBoard(row, col, amount),
       square1: null,
       square2: null,
       score: 0,
       mix_times: 5,
     };
     this.hasLine = false;
-    // this.doneLine = true;
   }
 
   generateBoard() {
@@ -155,6 +154,24 @@ class App extends Component {
     ];
     return arr;
   }
+  // generateBoard(row, col, amount) {
+  //   let arr = new Array(row);
+  //   for (let i = 0; i < row; i++) {
+  //     arr[i] = new Array(col);
+  //     let num;
+  //
+  //     for (let j = 0; j < col; j++) {
+  //       if (i === 0 || j === 0 || i === row - 1 || j === col - 1) {
+  //         num = 0;
+  //         arr[i][j] = num;
+  //       } else {
+  //         num = Math.floor(Math.random() * amount + 1);
+  //         arr[i][j] = num;
+  //       }
+  //     }
+  //   }
+  //   return arr;
+  // }
 
   componentDidUpdate() {
     if (this.hasLine) {
@@ -208,16 +225,14 @@ class App extends Component {
   handleClick = (i, j) => {
     if (!this.state.square1) {
       this.setState({
-        square1: { x: i, y: j },
-        valueSquare1: this.state.square[i][j],
+        square1: { x: i, y: j, value: this.state.square[i][j] },
       });
       return;
     }
 
     if (!this.state.square2) {
       this.setState({
-        square2: { x: i, y: j },
-        valueSquare2: this.state.square[i][j],
+        square2: { x: i, y: j, value: this.state.square[i][j] },
       });
     }
   };
@@ -232,9 +247,7 @@ class App extends Component {
     for (let yi = yleft + 1; yi < yright; yi++) {
       if (this.state.square[x][yi] !== 0) {
         return false;
-      }
-
-      tmp.push({ x: x, y: yi, value: "horizonal" });
+      } else tmp.push({ x: x, y: yi, value: "horizonal" });
     }
 
     lines.push(...tmp);
@@ -267,7 +280,7 @@ class App extends Component {
     }
 
     lines = [];
-    for (let yi = pleft.y; yi < pright.y; yi++) {
+    for (let yi = pleft.y + 1; yi < pright.y; yi++) {
       if (
         this.checkLineX(pleft.y, yi, pleft.x) &&
         this.checkLineY(pleft.x, pright.x, yi) &&
@@ -338,11 +351,13 @@ class App extends Component {
       pLeft = p2;
       pRight = p1;
     }
+    console.log("pLeft:", pLeft); // See Log
+    console.log("pRight:", pRight); // See Log
 
+    // Turn Left
+    lines = [];
     let p = { x: pRight.x, y: pLeft.y };
     if (this.state.square[p.x][p.y] === 0) {
-      lines = [];
-
       if (
         this.checkLineX(p.y, pRight.y, p.x) &&
         this.checkLineY(p.x, pLeft.x, p.y)
@@ -355,24 +370,24 @@ class App extends Component {
         return true;
       }
     }
-
+    //Turn Right
     lines = [];
     p = { x: pLeft.x, y: pRight.y };
-    if (this.state.square[p.x][p.y] !== 0) return false;
-    debugger;
-    if (
-      this.checkLineX(p.y, pLeft.y, p.x) &&
-      this.checkLineY(p.x, pRight.x, p.y)
-    ) {
-      if (pLeft.x > pRight.x) {
-        lines.push({ x: p.x, y: p.y, value: "top_left" });
-      } else {
-        lines.push({ x: p.x, y: p.y, value: "bottom_left" });
+    if (this.state.square[p.x][p.y] === 0) {
+      if (
+        this.checkLineX(p.y, pLeft.y, p.x) &&
+        this.checkLineY(p.x, pRight.x, p.y)
+      ) {
+        if (pLeft.x > pRight.x) {
+          lines.push({ x: p.x, y: p.y, value: "top_left" });
+        } else {
+          lines.push({ x: p.x, y: p.y, value: "bottom_left" });
+        }
+        return true;
       }
-      return true;
-    }
 
-    return false;
+      return false;
+    }
   }
   // Extend or L way in a horizontalway
   checkExtendY = (p1, p2, maxY) => {
@@ -414,7 +429,6 @@ class App extends Component {
             { x: pdown.x, y: yi, value: "top_left" }
           );
         }
-
         return true;
       }
     }
@@ -437,7 +451,7 @@ class App extends Component {
         this.state.square[pup.x][yi] === 0 &&
         this.state.square[pdown.x][yi] === 0
       ) {
-        if (pup.x > pdown.x) {
+        if (pup.y > pdown.y) {
           lines.push(
             { x: pup.x, y: yi, value: "top_right" },
             { x: pdown.x, y: yi, value: "bottom_right" }
@@ -587,8 +601,9 @@ class App extends Component {
     return false;
   };
   MixPokemon = () => {
-    if (this.state.mix_times > 0) {
-      let arr1 = this.state.square;
+    const { square, mix_times } = this.state;
+    if (mix_times > 0) {
+      let arr1 = square;
       for (let i = 0; i < row; i++) {
         for (let j = 0; j < col; j++) {
           if (arr1[i][j] !== 0) {
@@ -596,7 +611,7 @@ class App extends Component {
             newSquare[i][j] = Math.floor(Math.random() * amount) + 1;
             this.setState({
               square: newSquare,
-              mix_times: this.state.mix_times - 1,
+              mix_times: mix_times - 1,
             });
           }
         }
